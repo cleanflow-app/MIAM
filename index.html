@@ -250,6 +250,9 @@ nav button[aria-current="page"] .me{outline-color:var(--fg)}
 .a-tx{flex:1;min-width:0}.a-tx small{display:block;color:var(--muted);font-size:12px}.a-tx b{display:block;font-size:14.5px;line-height:1.35;margin-top:2px}
 .autocard:not(.fresh){background:#0f0f11;border-color:var(--line)}.autocard:not(.fresh) .a-ic{background:#1c1c1e;color:var(--muted)}
 
+.pk{color:var(--muted);font-size:11.5px;font-weight:400}
+.srcs{margin:0 0 12px;padding-left:18px;color:var(--muted);line-height:1.5;font-size:13px}
+
 /* stories */
 .story{cursor:pointer}
 .ring.seen{background:#3a3a3c}
@@ -379,7 +382,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
       <p class="sub" id="budgetLine" style="margin:-6px 0 6px"></p>
       <div id="shopList"></div>
       <div class="total"><span>Total chez <span id="cheapStore"></span></span><span id="shopTotal"></span></div>
-      <p class="note" style="text-align:left">Coche un produit quand tu l'as acheté, il passe dans ton frigo.</p>
+      <p class="note" style="text-align:left">Coche un produit quand tu l'as acheté, il passe dans ton frigo.<br>Prix dans le magasin le moins cher que tu as choisi, calculés à partir des prix moyens relevés (INSEE oct. 2026, Familles Rurales juin 2026, Numbeo nov. 2026) et des écarts entre enseignes du classement Radin Malin (18/11/2026). Les produits marqués « estimation » n'ont pas de relevé public récent.</p>
     </div>
   </section>
 
@@ -481,7 +484,13 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
         <label class="lbl" for="pPrice">Prix par portion (€)</label><input type="number" id="pPrice" step="0.1" min="0" value="2.5">
         <div class="row" style="margin-top:14px"><button class="btn" type="submit">Publier</button></div>
       </form>
-      <div data-pg="about" hidden><p class="sub">Miam, l'appli qui t'aide à cuisiner avec ce que tu as, dans ton budget et selon ton objectif. Prototype réalisé pour le cours d'IA.</p></div>
+      <div data-pg="about" hidden><span class="lbl">Sources des prix</span><ul class="srcs">
+          <li>Fruits, légumes, pain, crevettes : INSEE, prix moyens de vente au détail en métropole, octobre 2026.</li>
+          <li>Aubergine, concombre, salade : Familles Rurales, observatoire des prix des fruits et légumes, juin 2026.</li>
+          <li>Œufs, lait, riz, poulet : prix moyens France Numbeo (combien-coute.net), 17 novembre 2026.</li>
+          <li>Écarts entre magasins : classement Radin Malin du 18 novembre 2026 (Lidl 0 %, Aldi +0,6 %, Leclerc +2,8 %, Intermarché +7,8 %, Carrefour +8,6 %, Super U +8,8 %).</li>
+          <li>Autres produits : estimations au prix courant en marque distributeur, signalées dans l'appli.</li>
+        </ul><span class="lbl">Valeurs nutritionnelles</span><p class="sub">Calculées pour une portion à partir de valeurs moyennes pour 100 g de chaque ingrédient et d'une portion type, plus 8 g d'huile de cuisson.</p><span class="lbl">Miam</span><p class="sub">Miam, l'appli qui t'aide à cuisiner avec ce que tu as, dans ton budget et selon ton objectif. Prototype réalisé pour le cours d'IA.</p></div>
     </div>
   </div>
 </div>
@@ -637,7 +646,7 @@ $("#feed").addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(
  else if(a==="rec"){const r=byT(PM[p.img]);r?openR(r):openRecipe(p)}
  else if(false)openSheet(`<h3>${esc(p.t)}</h3><p class="sub">${p.min} min · ${eur(p.pp)} par portion · par ${esc(p.u)}</p><span class="lbl">Ingrédients</span><ul>${p.ing.map(i=>`<li>${esc(i)}</li>`).join("")}</ul><span class="lbl">Étapes</span><ol>${p.st.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>`);
  else if(a==="shop"){const sh=Object.entries(p.pr).filter(([s])=>S.stores.has(s)).sort((x,y)=>x[1]-y[1]);
-  openSheet(`<h3>Où acheter</h3><p class="sub">Prix du panier complet pour « ${esc(p.t)} », dans tes magasins.</p>${sh.length?sh.map(([s,v],i)=>`<div class="price"><span>${s}</span><span class="${i?"":"best"}">${eur(v)}${i?"":" · le moins cher"}</span></div>`).join("")+(sh.length>1?`<p class="save">Tu économises ${eur(sh.at(-1)[1]-sh[0][1])} en allant chez ${sh[0][0]}.</p>`:""):`<p class="sub">Choisis tes magasins dans ton profil.</p>`}`)}
+  openSheet(`<h3>Où acheter</h3><p class="sub">Prix du panier complet pour « ${esc(p.t)} », dans tes magasins. Calculé avec les prix moyens relevés en France et les écarts entre enseignes du classement Radin Malin du 18/11/2026.</p>${sh.length?sh.map(([s,v],i)=>`<div class="price"><span>${s}</span><span class="${i?"":"best"}">${eur(v)}${i?"":" · le moins cher"}</span></div>`).join("")+(sh.length>1?`<p class="save">Tu économises ${eur(sh.at(-1)[1]-sh[0][1])} en allant chez ${sh[0][0]}.</p>`:""):`<p class="sub">Choisis tes magasins dans ton profil.</p>`}`)}
 });
 $("#filterBtn").onclick=()=>{openSheet(`<h3>Afficher</h3><p class="sub">Choisis ce que tu veux voir dans ton fil.</p><div class="grid" id="fGrid">${FILTERS.map(f=>`<button class="opt" aria-pressed="${S.filter===f}">${f}</button>`).join("")}</div>`);
  [...$("#fGrid").children].forEach((b,i)=>b.onclick=()=>{S.filter=FILTERS[i];closeSheet();renderFeed();scrollTo({top:0})})};
@@ -739,8 +748,52 @@ posts.forEach(p=>{const m=MAC[PM[p.img]];if(m)[p.kcal,p.p,p.g,p.l]=m});
 const GOALS={"Équilibré":{d:"Manger varié",f:1.2},"Prise de muscle":{d:"Plus de protéines",f:2},"Sèche":{d:"Protéiné et léger",f:2.2},"Petit budget":{d:"Le moins cher",f:1.2}};
 const needP=()=>Math.round((S.weight||75)*GOALS[S.goal].f);
 const needK=()=>Math.round((S.weight||75)*({"Prise de muscle":38,"Sèche":26}[S.goal]||31)/10)*10;
-const macRow=r=>`<div class="macs"><span><b>${r.kcal}</b>kcal</span><span class="pp"><b>${r.p} g</b>protéines</span><span><b>${r.g} g</b>glucides</span><span><b>${r.l} g</b>lipides</span></div>`;
+const macRow=r=>`<p class="note" style="text-align:left;margin:0 0 6px">Pour 1 portion · ≈ ${eur(r.pp||0)} la portion</p><div class="macs"><span><b>${r.kcal}</b>kcal</span><span class="pp"><b>${r.p} g</b>protéines</span><span><b>${r.g} g</b>glucides</span><span><b>${r.l} g</b>lipides</span></div>`;
 const IK=Object.fromEntries(ING.map(([k,l,p])=>[k,{l,p}]));
+
+/* ---------- vrais prix + nutrition ----------
+ src : I = INSEE, prix moyens de vente au détail en métropole (oct. 2026)
+       F = Familles Rurales, observatoire des prix fruits et légumes (juin 2026)
+       N = Numbeo via combien-coute.net, prix moyens France (17 nov. 2026)
+       E = estimation (prix courant en marque distributeur)
+ champs : [libellé du paquet, prix du paquet €, poids du paquet kg, source, portion g, kcal, prot, gluc, lip pour 100 g] */
+const REAL={
+ "oeuf":["boîte de 6",1.90,0.36,"N",120,140,12.7,0.7,9.8],"tomate":["1 kg",4.25,1,"I",120,19,0.8,2.5,0.3],"oignon":["1 kg",2.82,1,"I",50,40,1.1,7,0.1],
+ "pate":["500 g",0.95,0.5,"E",90,355,12.5,71,1.5],"riz":["1 kg",2.30,1,"N",80,350,7,78,0.6],"poulet":["filets 600 g",7.20,0.6,"N",150,115,23,0,2],
+ "fromage":["râpé 200 g",2.39,0.2,"E",30,380,28,0,29],"lait":["1 L",1.20,1,"N",100,46,3.3,4.8,1.6],"pomme de terre":["2 kg",3.94,2,"I",250,80,2,17,0.1],
+ "poivron":["500 g",2.45,0.5,"I",100,26,1,4.5,0.3],"jambon":["4 tranches",2.49,0.16,"E",50,110,20,1,3],"creme":["20 cl",1.09,0.2,"E",40,290,2.4,3,30],
+ "boeuf hache":["500 g",6.99,0.5,"E",125,215,18,0,15],"carotte":["1 kg",2.18,1,"I",80,36,0.8,7,0.3],"ail":["1 tête",0.69,0.05,"E",5,130,6,24,0.5],
+ "salade":["1 pièce",1.32,0.4,"F",60,15,1.3,1.5,0.2],"pain":["baguette 250 g",1.03,0.25,"I",60,270,9,55,1.2],"parmesan":["100 g",2.79,0.1,"E",15,400,33,0,29],
+ "tortilla":["x8",1.59,0.32,"E",80,300,8,50,7],"pain burger":["x4",1.69,0.3,"E",75,280,9,50,5],"cheddar":["10 tranches",1.99,0.2,"E",40,400,24,1,33],
+ "cornichon":["360 g",1.39,0.36,"E",20,15,0.5,2,0.1],"lardon":["200 g",2.09,0.2,"E",60,270,15,1,23],"lentille":["500 g",1.89,0.5,"E",70,340,24,50,1.5],
+ "lait de coco":["40 cl",1.49,0.4,"E",100,190,2,3,19],"petit poi":["400 g",1.09,0.28,"E",60,70,5,10,0.5],"pain de mie":["500 g",1.39,0.5,"E",60,260,8,48,4],
+ "beurre":["250 g",2.69,0.25,"E",10,740,0.7,0.6,82],"banane":["1 kg",2.07,1,"I",120,90,1.1,20,0.3],"farine":["1 kg",0.99,1,"E",50,345,10,72,1],
+ "poireau":["1 kg",3.21,1,"I",100,30,1.5,4.5,0.3],"basilic":["1 pot",1.99,0.03,"E",3,25,3,1,0.6],"courgette":["1 kg",2.88,1,"I",150,17,1.2,2,0.3],
+ "thon":["boîte 140 g",1.79,0.104,"E",80,115,26,0,1],"mais":["285 g",0.99,0.285,"E",50,80,3,14,1.5],"champignon":["500 g",3.28,0.5,"I",80,22,3,0.5,0.3],
+ "saumon":["2 pavés 250 g",6.49,0.25,"E",125,200,20,0,13],"yaourt":["x4",0.99,0.5,"E",125,60,4,5,3],"citron":["x3",1.43,0.36,"I",20,30,0.7,3,0.3],
+ "chocolat":["noir 200 g",2.49,0.2,"E",40,560,7,30,40],"crevette":["300 g",5.11,0.3,"I",120,95,20,0,1.5],"chorizo":["225 g",2.79,0.225,"E",40,450,24,2,38],
+ "haricot rouge":["400 g",0.99,0.25,"E",80,110,8,15,0.5],"mozzarella":["125 g",0.99,0.125,"E",60,250,18,1,19],"pate a pizza":["1 rouleau",1.49,0.26,"E",130,290,8,48,7],
+ "pate brisee":["1 rouleau",1.19,0.23,"E",60,390,6,45,20],"epinard":["500 g",1.79,0.5,"E",100,25,3,1,0.4],"aubergine":["1 kg",2.89,1,"F",120,25,1,4,0.2],
+ "pois chiche":["400 g",0.89,0.265,"E",80,130,7,17,2.5],"semoule":["1 kg",1.49,1,"E",80,355,12,72,1.5],"merguez":["x6",3.99,0.35,"E",120,290,15,1,25],
+ "nouille":["250 g",1.39,0.25,"E",80,360,12,72,2],"sauce soja":["25 cl",1.79,0.25,"E",15,60,8,6,0],"brocoli":["1 pièce",1.69,0.5,"E",120,35,3,3,0.4],
+ "avocat":["x2",3.14,0.3,"I",75,170,1.6,1,17],"feta":["200 g",2.49,0.2,"E",40,270,16,1,22],"concombre":["1 pièce",1.31,0.4,"F",100,12,0.6,2,0.1],
+ "patate douce":["1 kg",2.99,1,"E",200,85,1.6,19,0.1],"saucisse":["x6",3.49,0.36,"E",120,270,13,1,24],"sauce tomate":["500 g",1.19,0.5,"E",100,40,1.5,7,0.5],
+ "lasagne":["500 g",1.39,0.5,"E",70,355,12,70,1.5],"cabillaud":["2 filets 250 g",5.49,0.25,"E",125,80,18,0,0.7],"tofu":["250 g",2.29,0.25,"E",100,125,13,2,7],
+ "pain pita":["x6",1.59,0.42,"E",70,270,9,55,1.2],"houmous":["200 g",1.79,0.2,"E",50,300,7,13,24],"gnocchi":["500 g",1.39,0.5,"E",200,155,4,32,0.5],
+ "quinoa":["500 g",2.79,0.5,"E",70,370,14,64,6],"skyr":["450 g",1.99,0.45,"E",150,63,10,4,0.2],"avoine":["500 g",1.29,0.5,"E",50,370,13,59,7],
+ "fromage blanc":["500 g",1.49,0.5,"E",150,75,7.5,4,3],"dinde":["escalopes 400 g",5.49,0.4,"E",150,110,24,0,1.5]
+};
+const SRC={I:"INSEE · oct. 2026",F:"Familles Rurales · juin 2026",N:"Numbeo · nov. 2026",E:"estimation"};
+/* écarts entre enseignes : classement Radin Malin du 18/11/2026 (Lidl = référence) */
+const IDX={"Lidl":1,"Aldi":1.006,"Leclerc":1.028,"Intermarché":1.078,"Carrefour":1.086,"Super U":1.088};
+const IDX_AVG=Object.values(IDX).reduce((a,b)=>a+b,0)/Object.keys(IDX).length;
+const atStore=(v,st)=>v*(IDX[st]||IDX_AVG)/IDX_AVG;
+const cheapestStore=()=>{const st=[...S.stores].filter(x=>IDX[x]);return st.sort((a,b)=>IDX[a]-IDX[b])[0]||"Leclerc"};
+Object.entries(REAL).forEach(([k,v])=>{if(IK[k])Object.assign(IK[k],{p:v[1],pack:v[0],src:v[3]})});
+const nutr=r=>{let t=[0,0,0,0],c=0;r.need.forEach(k=>{const v=REAL[k];if(!v)return;const g=v[4]/100;t[0]+=v[5]*g;t[1]+=v[6]*g;t[2]+=v[7]*g;t[3]+=v[8]*g;c+=v[1]/v[2]*v[4]/1000});
+ if(r.min>5){t[0]+=72;t[3]+=8;c+=0.08}/* huile de cuisson 8 g */ return {kcal:Math.round(t[0]/10)*10,p:Math.round(t[1]),g:Math.round(t[2]),l:Math.round(t[3]),pp:Math.round(c*100)/100}};
+RDB.forEach(r=>{Object.assign(r,nutr(r));r.basket=r.need.reduce((a,k)=>a+(IK[k]?.p||1.5),0)});
+posts.forEach(p=>{const r=RDB.find(x=>x.t===PM[p.img]);if(!r)return;Object.assign(p,{kcal:r.kcal,p:r.p,g:r.g,l:r.l,pp:r.pp,pr:Object.fromEntries(Object.keys(IDX).map(st=>[st,Math.round(atStore(r.basket,st)*100)/100]))})});
 let fridge=[];try{fridge=JSON.parse(localStorage.getItem("miam-frigo"))||null}catch(e){}
 if(!Array.isArray(fridge))fridge=["oeuf","tomate","oignon","pate","poivron"];
 const saveF=()=>{try{localStorage.setItem("miam-frigo",JSON.stringify(fridge))}catch(e){}};
@@ -756,12 +809,12 @@ function renderFridge(){if(typeof renderIA==="function"&&$("#weekList"))setTimeo
  renderMatches();
 }
 function renderMatches(){
- const shop=[...S.stores].includes("Aldi")?"Aldi":[...S.stores].includes("Lidl")?"Lidl":[...S.stores][0]||"ton magasin";
+ const shop=cheapestStore();
  const rs=RDB.filter(r=>!r.al.some(a=>S.allergies.has(a))&&dietOk(r.v)).map(r=>{const miss=r.need.filter(k=>!has(k));return{...r,miss,haveN:r.need.length-miss.length,cost:miss.reduce((s,k)=>s+(IK[k]?.p||1.5),0)}})
   .filter(r=>r.haveN>0).sort((a,b)=>a.miss.length-b.miss.length||b.haveN-a.haveN).slice(0,8);
  const ready=rs.filter(r=>!r.miss.length).length;
  $("#scanRes").innerHTML=!fridge.length?"":`<div class="box"><h3>${ready?`${ready} plat${ready>1?"s":""} possible${ready>1?"s":""} sans rien acheter`:"Avec un ou deux achats, tu peux faire"}</h3><div class="list">${rs.length?rs.map((r,i)=>`<button class="item" data-r="${RDB.indexOf(RDB.find(x=>x.t===r.t))}">${thumb(r.dish,i+90,r.img)}<div><b>${esc(r.t)}</b><small>${r.min} min · ${r.miss.length?`il manque : ${r.miss.map(label).join(", ").toLowerCase()}`:"<span style='color:var(--good);font-weight:600'>tu as tout</span>"}</small>
-  <span class="meter"><i style="width:${r.haveN/r.need.length*100}%"></i></span></div><span class="chev">${r.miss.length?`<small class="cost">+${eur(r.cost)}</small>`:ico("chev")}</span></button>`).join(""):`<p class="sub" style="margin:0">Aucune recette trouvée avec ces ingrédients. Ajoute-en quelques-uns.</p>`}</div><p class="note" style="text-align:left">Prix des ingrédients manquants chez ${esc(shop)}, à titre d'exemple.</p></div>`;
+  <span class="meter"><i style="width:${r.haveN/r.need.length*100}%"></i></span></div><span class="chev">${r.miss.length?`<small class="cost">+${eur(r.cost)}</small>`:ico("chev")}</span></button>`).join(""):`<p class="sub" style="margin:0">Aucune recette trouvée avec ces ingrédients. Ajoute-en quelques-uns.</p>`}</div><p class="note" style="text-align:left">Prix moyens en France des ingrédients manquants · sources : INSEE, Familles Rurales, Numbeo (voir Profil › À propos).</p></div>`;
  requestAnimationFrame(paintAll);
 }
 function showSugg(){const n=norm($("#ingIn").value);const el=$("#sugg");if(!n){el.innerHTML="";return}
@@ -805,7 +858,7 @@ function renderIA(){
  $("#rTitle").textContent=q?`${list.length} recette${list.length>1?"s":""} pour « ${$("#rq").value.trim()} »`:(pickDay?`Choisis un plat pour ${pickDay}`:{"Prise de muscle":"Idées pour ta prise de muscle","Sèche":"Idées pour ta sèche","Petit budget":"Idées petit budget"}[S.goal]||"Idées avec ce que tu as");
  $("#rList").innerHTML=list.length?list.slice(0,q?20:8).map((r,i)=>recRow(r,i,`<button class="addbtn" data-pick="${esc(r.t)}">${pickDay?pickDay.slice(0,3):"Ajouter"}</button>`)).join(""):`<p class="sub" style="margin:0">Aucune recette trouvée. Essaie « poulet », « pâtes », « végé » ou « dessert ».</p>`;
  // courses, rangées par plat
- const st=[...S.stores],cheap=st.includes("Aldi")?"Aldi":st.includes("Lidl")?"Lidl":st[0]||"ton magasin",k=cheap==="Aldi"?.98:cheap==="Lidl"?1:1.12;
+ const cheap=cheapestStore(),k=(IDX[cheap]||IDX_AVG)/IDX_AVG;
  $("#cheapStore").textContent=cheap;
  const nPlan=DAYS.filter(d=>plan[d]).length;
  const planned=DAYS.map(d=>plan[d]&&byT(plan[d])).filter(Boolean),avgP=planned.length?Math.round(planned.reduce((s,r)=>s+r.p,0)/planned.length):0;
@@ -818,7 +871,7 @@ function renderIA(){
  const firstFor={};let T=0,html="",n=0;
  DAYS.forEach((d,di)=>{const r=plan[d]&&byT(plan[d]);if(!r)return;const miss=missOf(r);
   let sub=0;const rows=miss.map(x=>{const pr=(IK[x]?.p||1.5)*k;if(firstFor[x])return `<div class="check dup"><span class="dot"></span><span>${esc(label(x))}<small class="for">déjà dans ta liste pour ${firstFor[x].toLowerCase()}</small></span><span class="p">—</span></div>`;
-   firstFor[x]=d;sub+=pr;n++;return `<label class="check"><input type="checkbox" id="sh_${d}_${x.replace(/\W/g,"")}" data-buy="${x}"><span>${esc(label(x))}</span><span class="p">${eur(pr)}</span></label>`}).join("");
+   firstFor[x]=d;sub+=pr;n++;return `<label class="check"><input type="checkbox" id="sh_${d}_${x.replace(/\W/g,"")}" data-buy="${x}"><span>${esc(label(x))} <small class="pk">${esc(IK[x]?.pack||"")}${IK[x]?.src&&IK[x].src!=="E"?" · "+SRC[IK[x].src]:" · estimation"}</small></span><span class="p">${eur(pr)}</span></label>`}).join("");
   T+=sub;
   html+=`<div class="sgroup"><div class="shead">${thumb(r.dish,di+150,r.img)}<div><small>${d}</small><b>${esc(r.t)}</b></div><span class="sub-t">${miss.length?eur(sub):""}</span></div>
    ${miss.length?rows:`<p class="allok">Tu as déjà tout dans ton frigo</p>`}</div>`});
