@@ -253,6 +253,25 @@ nav button[aria-current="page"] .me{outline-color:var(--fg)}
 .pk{color:var(--muted);font-size:11.5px;font-weight:400}
 .srcs{margin:0 0 12px;padding-left:18px;color:var(--muted);line-height:1.5;font-size:13px}
 
+/* sport */
+.grid.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.grid.g4 .opt{padding:10px 4px;font-size:12.5px}
+.today{background:linear-gradient(135deg,rgba(255,106,61,.16),rgba(214,41,118,.14));border-color:rgba(255,106,61,.35)}
+.t-top{display:flex;justify-content:space-between;align-items:center}
+.t-top small{display:block;color:var(--muted);font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}.t-top b{font-size:22px}
+.done{display:flex;align-items:center;gap:4px;font-weight:700;color:#ff8a4c;font-variant-numeric:tabular-nums}.done svg{width:18px;height:18px}
+.rrow .rinfo small+small{margin-top:2px}
+.hrow{display:flex;align-items:center;gap:10px;padding:10px 0}
+.hdot{flex:0 0 10px;height:10px;border-radius:50%;background:var(--good)}.hdot.heavy{background:#ff8a4c}
+.hrow div{flex:1;min-width:0}.hrow b{display:block}.hrow small{color:var(--muted);font-size:12.5px}
+.hk{font-weight:700;font-variant-numeric:tabular-nums;font-size:13px}
+.prog{display:flex;flex-direction:column}
+.prow2{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);text-align:left}
+.prow2:last-child{border:0}.prow2 span{flex:1;font-weight:600}.prow2 b{font-weight:700}.prow2 b.rest{color:var(--muted);font-weight:500}
+.prow2 .chev{width:16px;height:16px;color:var(--muted)}.prow2.tod span::after{content:" · aujourd'hui";color:#ff8a4c;font-weight:600;font-size:12px}
+.sbadge{display:block;font-style:normal;font-size:9.5px;letter-spacing:0;text-transform:none;color:#ff8a4c;font-weight:700;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46px}
+.sbadge.rest{color:var(--muted);font-weight:600}
+.dname{flex:0 0 46px!important}
+
 /* stories */
 .story{cursor:pointer}
 .ring.seen{background:#3a3a3c}
@@ -321,6 +340,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
   <symbol id="i-cam" viewBox="0 0 24 24"><path d="M3.5 8h3.3l1.8-2.8h6.8L17.2 8h3.3v11.5h-17z"/><circle cx="12" cy="13.3" r="3.6"/></symbol>
   <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></symbol>
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></symbol>
+  <symbol id="i-gym" viewBox="0 0 24 24"><path d="M6.5 7v10M17.5 7v10M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/></symbol>
+  <symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 21c-3.9 0-6.5-2.6-6.5-6.2 0-3.3 2.4-5.4 3.6-8.3.4 2 1.6 3.2 2.6 3.7C11.6 7 13 4.6 15 3c-.3 3 3.5 5.6 3.5 11.2 0 3.9-2.6 6.8-6.5 6.8z"/></symbol>
   <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
   <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M9.2 3.5v17M14.8 3.5v17M3.5 9.2h17M3.5 14.8h17"/></symbol>
   <symbol id="i-left" viewBox="0 0 24 24"><path d="M14.5 6l-6 6 6 6"/></symbol>
@@ -386,6 +407,36 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
     </div>
   </section>
 
+  <!-- SPORT -->
+  <section id="v-sport" class="page pad" hidden>
+    <h2 class="ptitle">Sport</h2>
+    <p class="sub">Note tes séances : Miam adapte tes besoins et te propose les bons plats.</p>
+    <div class="box today" id="todayCard"></div>
+    <form class="box" id="logForm" style="margin-top:12px">
+      <h3>Noter une séance</h3>
+      <span class="lbl">Séance</span><div class="grid g3" id="lType"></div>
+      <span class="lbl">Durée</span><div class="grid g4" id="lDur"></div>
+      <span class="lbl">Intensité</span><div class="grid g3" id="lInt"></div>
+      <span class="lbl">Quand</span><div class="grid" id="lWhen"></div>
+      <div class="row" style="margin-top:14px"><button class="btn" type="submit">Enregistrer la séance</button></div>
+    </form>
+    <div class="box" style="margin-top:12px">
+      <h3 id="recoTitle">Plats pour toi</h3>
+      <p class="sub" id="recoSub" style="margin:-6px 0 6px"></p>
+      <div class="list" id="recoList"></div>
+    </div>
+    <div class="box" style="margin-top:12px">
+      <h3>Ma semaine de sport</h3>
+      <div class="gc-stats" id="wkStats"></div>
+      <div class="list" id="histList"></div>
+    </div>
+    <div class="box" style="margin-top:12px">
+      <h3>Mon programme</h3>
+      <p class="sub" style="margin:-6px 0 8px">Touche un jour pour changer sa séance. Il s'affiche aussi dans Ta semaine.</p>
+      <div class="prog" id="progList"></div>
+    </div>
+  </section>
+
   <!-- PROFIL -->
   <section id="v-prof" class="page" hidden>
     <div class="phead pad">
@@ -416,6 +467,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
   <button data-v="feed" aria-label="Accueil" aria-current="page"><svg class="i fillable"><use href="#i-home"/></svg></button>
   <button data-v="scan" aria-label="Mon frigo"><svg class="i"><use href="#i-fridge"/></svg></button>
   <button data-v="ia" aria-label="Ta semaine"><svg class="i"><use href="#i-cal"/></svg></button>
+  <button data-v="sport" aria-label="Sport"><svg class="i"><use href="#i-gym"/></svg></button>
   <button data-v="prof" aria-label="Profil"><span class="me"><span class="av" style="background:linear-gradient(135deg,#ff7a59,#c2185b);font-size:13px">L</span></span></button>
 </nav>
 
@@ -842,7 +894,7 @@ function renderIA(){
  const ok=r=>!r.al.some(a=>S.allergies.has(a))&&dietOk(r.v);
  // planning
  $("#weekList").innerHTML=DAYS.map(d=>{const r=plan[d]&&byT(plan[d]);return `<div class="day">
-  <span class="dname">${d.slice(0,3)}</span>
+  <span class="dname">${d.slice(0,3)}${S.program&&S.program[d]?`<i class="sbadge ${S.program[d]==="Repos"?"rest":""}">${esc(S.program[d]==="Repos"?"Repos":S.program[d])}</i>`:""}</span>
   ${r?`<button class="dmeal" data-open="${esc(r.t)}">${thumb(r.dish,DAYS.indexOf(d)+150,r.img)}<span><b>${esc(r.t)}</b><small>${r.p} g prot. · ${missOf(r).length?`${missOf(r).length} ingrédient${missOf(r).length>1?"s":""} à acheter`:"tu as tout"}</small></span></button><button class="dx" data-del="${d}" aria-label="Retirer le plat de ${d}">${ico("x")}</button>`
    :`<button class="dadd" data-add="${d}">${ico("plus")}Ajouter un plat</button>`}</div>`}).join("");
  // recherche
@@ -920,13 +972,13 @@ function renderSum(){
 /* ---------- sauvegarde en ligne (db) + menu automatique ---------- */
 let stRef=null,cloudReady=false,lastJSON="",autoInfo=null,autoSeen="";
 try{autoSeen=localStorage.getItem("miam-auto-seen")||""}catch(e){}
-const stateOf=()=>({fridge:[...fridge],plan:{...plan},goal:S.goal,weight:S.weight,budget:S.budget,allergies:[...S.allergies],diet:S.diet,stores:[...S.stores]});
+const stateOf=()=>({fridge:[...fridge],plan:{...plan},goal:S.goal,weight:S.weight,budget:S.budget,allergies:[...S.allergies],diet:S.diet,stores:[...S.stores],program:{...S.program},sessions:S.sessions.slice(0,60)});
 let saveT;
 function cloudSave(){if(!stRef||!cloudReady)return;clearTimeout(saveT);saveT=setTimeout(async()=>{const st=stateOf(),j=JSON.stringify(st);if(j===lastJSON)return;lastJSON=j;try{await stRef.set(autoInfo?{...st,auto:autoInfo}:st)}catch(e){console.warn("Sauvegarde impossible",e&&e.code)}},700)}
 function applyCloud(d){
  if(Array.isArray(d.fridge))fridge=d.fridge.slice();if(d.plan&&typeof d.plan==="object")plan={...d.plan};
  if(GOALS[d.goal])S.goal=d.goal;if(+d.weight)S.weight=+d.weight;if(+d.budget)S.budget=+d.budget;
- if(Array.isArray(d.allergies))S.allergies=new Set(d.allergies);if(DIETS.includes(d.diet))S.diet=d.diet;if(Array.isArray(d.stores))S.stores=new Set(d.stores);
+ if(Array.isArray(d.allergies))S.allergies=new Set(d.allergies);if(DIETS.includes(d.diet))S.diet=d.diet;if(Array.isArray(d.stores))S.stores=new Set(d.stores);if(d.program&&typeof d.program==="object")S.program={...S.program,...d.program};if(Array.isArray(d.sessions))S.sessions=d.sessions.slice(0,60);saveSport();
  autoInfo=d.auto&&typeof d.auto==="object"?d.auto:null;
  $("#poids").value=S.weight;$("#budget").value=S.budget;$("#budVal").textContent=S.budget+" €";
  lastJSON=JSON.stringify(stateOf());saveF();saveP();refresh();
@@ -942,10 +994,73 @@ $("#autoOk").onclick=()=>{if(!autoInfo)return;autoSeen=autoInfo.at;try{localStor
 (async()=>{try{const db=await window.claude?.use?.("db");if(!db)return;stRef=db.doc("miam/state");
  const t=setTimeout(()=>{cloudReady=true},10000);
  stRef.onSnapshot(snap=>{if(snap.metadata.hasPendingWrites)return;clearTimeout(t);
-  if(snap.exists){const d=snap.data(),j=JSON.stringify({fridge:d.fridge,plan:d.plan,goal:d.goal,weight:d.weight,budget:d.budget,allergies:d.allergies,diet:d.diet,stores:d.stores});
+  if(snap.exists){const d=snap.data(),j=JSON.stringify({fridge:d.fridge,plan:d.plan,goal:d.goal,weight:d.weight,budget:d.budget,allergies:d.allergies,diet:d.diet,stores:d.stores,program:d.program||S.program,sessions:d.sessions||S.sessions});
    const autoChanged=JSON.stringify(d.auto||null)!==JSON.stringify(autoInfo);
    if(j!==lastJSON||autoChanged)applyCloud(d)}else{lastJSON=JSON.stringify(stateOf())}
   cloudReady=true;renderAuto()},e=>{console.warn("db",e&&e.code);cloudReady=false})}catch(e){}})();
+/* ---------- sport ---------- */
+const STYPES=["Push","Pull","Jambes","Haut du corps","Bas du corps","Full body","Cardio","Sport co","Repos"];
+const MET={muscu:[3.5,5,6],Cardio:[6,8,10],"Sport co":[5,7,8]};
+const INTS=["Légère","Moyenne","Intense"],DURS=[30,45,60,90];
+const isHeavy=t=>t==="Jambes"||t==="Bas du corps"||t==="Full body";
+let sp={};try{sp=JSON.parse(localStorage.getItem("miam-sport"))||{}}catch(e){}
+S.program=sp.program||{Lundi:"Push",Mardi:"Pull",Mercredi:"Jambes",Jeudi:"Repos",Vendredi:"Haut du corps",Samedi:"Bas du corps",Dimanche:"Repos"};
+S.sessions=Array.isArray(sp.sessions)?sp.sessions:[];
+function saveSport(){try{localStorage.setItem("miam-sport",JSON.stringify({program:S.program,sessions:S.sessions}))}catch(e){}}
+const todayName=()=>DAYS[(new Date().getDay()+6)%7];
+const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const kcalOf=(type,min,int)=>{const m=(MET[type]||MET.muscu)[INTS.indexOf(int)]||5;return Math.round(m*(S.weight||75)*min/60)};
+let form={type:null,min:60,int:"Moyenne",when:"Aujourd'hui"};
+function todaySession(){const t=ymd(new Date());return S.sessions.find(x=>x.d===t)}
+function mode(){const ts=todaySession(),plan=S.program[todayName()];
+ if(ts)return{k:"post",type:ts.type,int:ts.int,title:"Après ta séance "+ts.type,sub:isHeavy(ts.type)||ts.int==="Intense"?"Récupération : beaucoup de protéines et des glucides pour recharger.":"Récupération : un repas riche en protéines."};
+ if(!plan||plan==="Repos")return{k:"rest",type:"Repos",title:"Jour de repos",sub:"Plus léger aujourd'hui, mais toujours protéiné pour garder le muscle."};
+ return{k:"pre",type:plan,title:"Avant ta séance "+plan,sub:isHeavy(plan)?"Grosse séance prévue : fais le plein de glucides.":"Séance prévue : protéines et glucides modérés."}}
+function recoScore(r,m){const miss=missOf(r).length/r.need.length;let s=miss*18+Math.max(0,r.kcal-750)/5+Math.max(0,r.l-25)*0.8;
+ if(m.k==="post")s+=-r.p*1.2-(isHeavy(m.type)||m.int==="Intense"?r.g*0.35:0);
+ else if(m.k==="pre")s+=isHeavy(m.type)?-r.g*0.5-r.p*0.4:-r.p*0.8-r.g*0.15;
+ else s+=-r.p*0.9+(r.kcal>550?(r.kcal-550)/8:0);
+ return s}
+function renderSport(){if(!$("#v-sport"))return;
+ const m=mode(),tn=todayName(),ts=todaySession(),spent=ts?ts.kcal:0;
+ const extraP=ts?(isHeavy(ts.type)||ts.int==="Intense"?Math.round((S.weight||75)*0.3):Math.round((S.weight||75)*0.15)):0;
+ $("#todayCard").innerHTML=`<div class="t-top"><div><small>${tn} · ${ts?"séance faite":"prévu"}</small><b>${esc(ts?ts.type:(S.program[tn]||"Repos"))}</b></div>${ts?`<span class="done">${ico("fire")}${spent} kcal</span>`:""}</div>
+  <div class="gc-stats"><div><b>${needP()+extraP} g</b><span>protéines aujourd'hui</span></div><div><b>${needK()+spent}</b><span>kcal aujourd'hui</span></div><div><b>${ts?ts.min+" min":"—"}</b><span>${ts?esc(ts.int):"pas encore de séance"}</span></div></div>
+  ${ts?"":`<button class="btn" id="quickLog" style="width:100%">J'ai fait ma séance ${esc(S.program[tn]&&S.program[tn]!=="Repos"?S.program[tn]:"")}</button>`}`;
+ const ql=$("#quickLog");if(ql)ql.onclick=()=>{form.type=S.program[tn]&&S.program[tn]!=="Repos"?S.program[tn]:"Full body";form.when="Aujourd'hui";renderLog();$("#logForm").scrollIntoView({behavior:"smooth",block:"center"})};
+ renderLog();
+ // reco
+ const ok=r=>!r.al.some(a=>S.allergies.has(a))&&dietOk(r.v);
+ const list=RDB.filter(ok).sort((a,b)=>recoScore(a,m)-recoScore(b,m)).slice(0,5);
+ $("#recoTitle").textContent=m.title;$("#recoSub").textContent=m.sub;
+ $("#recoList").innerHTML=list.map((r,i)=>{const miss=missOf(r);return `<div class="item rrow">${thumb(r.dish,i+300,r.img)}<button class="rinfo" data-open="${esc(r.t)}"><b>${esc(r.t)}</b><small>${r.p} g protéines · ${r.g} g glucides · ${r.kcal} kcal</small><small>${miss.length?"il manque "+miss.map(label).join(", ").toLowerCase():"tu as tout dans ton frigo"}</small></button><button class="addbtn" data-tonight="${esc(r.t)}">Ce soir</button></div>`}).join("");
+ // stats
+ const now=new Date(),mon=new Date(now);mon.setDate(now.getDate()-((now.getDay()+6)%7));const monS=ymd(mon);
+ const wk=S.sessions.filter(x=>x.d>=monS),planned=Object.values(S.program).filter(x=>x!=="Repos").length;
+ $("#wkStats").innerHTML=`<div><b>${wk.length}/${planned}</b><span>séances</span></div><div><b>${wk.reduce((a,x)=>a+x.min,0)}</b><span>minutes</span></div><div><b>${wk.reduce((a,x)=>a+x.kcal,0)}</b><span>kcal brûlées</span></div>`;
+ $("#histList").innerHTML=S.sessions.length?S.sessions.slice(0,8).map((x,i)=>{const d=new Date(x.d+"T12:00");return `<div class="hrow"><span class="hdot ${isHeavy(x.type)?"heavy":""}"></span><div><b>${esc(x.type)}</b><small>${d.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"short"})} · ${x.min} min · ${esc(x.int)}</small></div><span class="hk">${x.kcal} kcal</span><button class="dx" data-delsess="${i}" aria-label="Supprimer la séance">${ico("x")}</button></div>`}).join(""):`<p class="sub" style="margin:0">Aucune séance notée pour l'instant.</p>`;
+ // program
+ $("#progList").innerHTML=DAYS.map(d=>`<button class="prow2 ${d===tn?"tod":""}" data-prog="${d}"><span>${d}</span><b class="${S.program[d]==="Repos"?"rest":""}">${esc(S.program[d]||"Repos")}</b>${ico("chev","chev")}</button>`).join("");
+ requestAnimationFrame(paintAll)}
+function renderLog(){
+ const g=(id,items,cur,fmt)=>{$(id).innerHTML=items.map(x=>`<button type="button" class="opt" data-v2="${esc(String(x))}" aria-pressed="${String(cur)===String(x)}">${esc(fmt?fmt(x):x)}</button>`).join("")};
+ g("#lType",STYPES.filter(x=>x!=="Repos"),form.type);g("#lDur",DURS,form.min,x=>x+" min");g("#lInt",INTS,form.int);g("#lWhen",["Aujourd'hui","Hier"],form.when)}
+$("#lType").onclick=e=>{const b=e.target.closest("[data-v2]");if(b){form.type=b.dataset.v2;renderLog()}};
+$("#lDur").onclick=e=>{const b=e.target.closest("[data-v2]");if(b){form.min=+b.dataset.v2;renderLog()}};
+$("#lInt").onclick=e=>{const b=e.target.closest("[data-v2]");if(b){form.int=b.dataset.v2;renderLog()}};
+$("#lWhen").onclick=e=>{const b=e.target.closest("[data-v2]");if(b){form.when=b.dataset.v2;renderLog()}};
+$("#logForm").onsubmit=e=>{e.preventDefault();if(!form.type){toast("Choisis le type de séance");return}
+ const d=new Date();if(form.when==="Hier")d.setDate(d.getDate()-1);
+ const ses={d:ymd(d),type:form.type,min:form.min,int:form.int,kcal:kcalOf(form.type,form.min,form.int)};
+ S.sessions=[ses,...S.sessions.filter(x=>!(x.d===ses.d&&x.type===ses.type))].sort((a,b)=>a.d<b.d?1:-1).slice(0,60);
+ saveSport();form.type=null;renderSport();renderIA();toast(`Séance enregistrée · ${ses.kcal} kcal`);$("#recoTitle").scrollIntoView({behavior:"smooth",block:"start"})};
+$("#v-sport").addEventListener("click",e=>{const o=e.target.closest("[data-open]"),t=e.target.closest("[data-tonight]"),pg=e.target.closest("[data-prog]"),ds=e.target.closest("[data-delsess]");
+ if(t){plan[todayName()]=t.dataset.tonight;saveP();renderIA();toast(`${t.dataset.tonight} ajouté ce soir`);return}
+ if(o)return openR(byT(o.dataset.open));
+ if(ds){S.sessions.splice(+ds.dataset.delsess,1);saveSport();renderSport();renderIA();return}
+ if(pg){const d=pg.dataset.prog;openSheet(`<h3>${d}</h3><p class="sub">Choisis la séance prévue.</p><div class="grid g3" id="pGrid">${STYPES.map(x=>`<button class="opt" data-pt="${x}" aria-pressed="${S.program[d]===x}">${x}</button>`).join("")}</div>`);
+  $("#pGrid").onclick=ev=>{const b=ev.target.closest("[data-pt]");if(!b)return;S.program[d]=b.dataset.pt;saveSport();closeSheet();renderSport();renderIA()}}});
+
 /* ---------- navigation + bulle ---------- */
 const navBtns=[...document.querySelectorAll("nav button")];let cur="feed";
 function moveBubble(anim=true){const b=navBtns.find(x=>x.dataset.v===cur),bub=$("#bubble");if(!anim)bub.style.transition="none";bub.style.width=b.offsetWidth+"px";bub.style.transform=`translateX(${b.offsetLeft}px)`;if(!anim){bub.offsetWidth;bub.style.transition=""}}
@@ -954,7 +1069,7 @@ function go(v){cur=v;document.querySelectorAll("section[id^=v-]").forEach(s=>s.h
  document.documentElement.classList.toggle("snap",v==="feed");moveBubble();scrollTo({top:0});requestAnimationFrame(paintAll)}
 navBtns.forEach(b=>b.onclick=()=>go(b.dataset.v));
 let tt;function toast(m){const t=$("#toast");t.textContent=m;t.style.opacity=1;clearTimeout(tt);tt=setTimeout(()=>t.style.opacity=0,1800)}
-function refresh(){renderProfile();renderFeed();renderIA();renderFridge()}
+function refresh(){renderProfile();renderFeed();renderIA();renderFridge();if(typeof renderSport==="function")renderSport()}
 renderStories();refresh();document.documentElement.classList.add("snap");moveBubble(false);
 </script>
 
