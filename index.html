@@ -310,6 +310,34 @@ nav button[aria-current="page"] .me{outline-color:var(--fg)}
 .pstat{display:flex;gap:10px;margin:12px 0}.pstat div{flex:1;background:#1c1c1e;border-radius:14px;padding:10px}.pstat small{display:block;color:var(--muted);font-size:11.5px}.pstat b{font-size:18px;font-variant-numeric:tabular-nums}
 .chart svg{width:100%;height:auto;display:block}
 
+/* semaine jour par jour */
+.dpills{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-bottom:12px}
+.dpill{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0 7px;border-radius:16px;background:#0f0f11;border:1px solid var(--line);min-width:0}
+.dpill .dpw{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase}
+.dpill .dpn{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.dpill .dpr{--f:0;width:22px;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--good) calc(var(--f)*100%),#2c2c2e 0)}
+.dpill .dps{font-size:9px;color:var(--muted);font-weight:700;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px;min-height:11px}.dpill .dps.sp{color:#ff8a4c}
+.dpill.tod .dpw{color:#ff8a4c}
+.dpill.on{background:var(--fg);border-color:var(--fg)}.dpill.on .dpw,.dpill.on .dpn,.dpill.on .dps{color:#000}.dpill.on .dpr{background:linear-gradient(90deg,#1f9d55 calc(var(--f)*100%),#c7c7cc 0)}
+.dhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.dhead small{display:block;color:var(--muted);font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}.dhead b{font-size:22px}
+.dtag{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:6px 10px;background:rgba(255,138,76,.14);color:#ff8a4c;font-weight:700;font-size:12.5px}.dtag svg{width:15px;height:15px}.dtag.rest{background:#1c1c1e;color:var(--muted)}
+.macros{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
+.mbt{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:var(--muted);margin-bottom:4px}.mbt b{color:var(--fg);font-variant-numeric:tabular-nums;font-size:13px}.mbt small{color:var(--muted);font-weight:500}
+.slots{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.slh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}.slh span{font-weight:800;font-size:14px}.slh small{color:var(--muted);font-size:11.5px}
+.slc{display:flex;align-items:center;gap:8px;background:#1c1c1e;border-radius:16px;padding:8px}
+.slm{flex:1;min-width:0;display:flex;gap:10px;align-items:center;text-align:left}
+.slm canvas,.slm img{flex:0 0 52px;width:52px;height:52px;border-radius:12px;object-fit:cover}
+.slm span{min-width:0}.slm b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.slm small{display:block;color:var(--muted);font-size:11.5px}.slm small.w{color:var(--warn)}.slm small.ok{color:var(--good)}
+.sla{display:flex;flex-direction:column;gap:4px;align-items:center}
+.por{font-size:12px;font-weight:800;border-radius:8px;padding:4px 7px;background:#2c2c2e;font-variant-numeric:tabular-nums}
+.ic{width:28px;height:24px;display:grid;place-items:center;border-radius:8px;font-size:13px;color:var(--muted)}.ic svg{width:14px;height:14px}
+.btn.wide{width:100%;margin-top:12px}
+.slot .dadd{width:100%}
+#clearDay{flex:0 0 auto}
+.opt[disabled]{opacity:.3}
+
 /* stories */
 .story{cursor:pointer}
 .ring.seen{background:#3a3a3c}
@@ -429,11 +457,18 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
       <div class="a-tx"><small>Menu automatique · <span class="a-when"></span></small><b class="a-msg"></b></div>
       <button class="clear" id="autoOk">OK</button>
     </div>
-    <div class="box goalcard" id="goalCard" style="margin-bottom:12px"></div>
-    <div class="box"><div class="weeks" id="weekList"></div></div>
+    <div class="dpills" id="dayPills"></div>
+    <div class="box dayp">
+      <div class="dhead" id="dayHead"></div>
+      <div class="macros" id="dayMacros"></div>
+      <p class="gc-note" id="dayNote"></p>
+      <div class="slots" id="slots"></div>
+      <div class="row" style="margin-top:12px"><button class="btn" id="fillDay"><svg class="i"><use href="#i-spark"/></svg>Remplir ma journée</button><button class="btn alt" id="clearDay">Vider</button></div>
+    </div>
+    <button class="btn alt wide" id="fillWeek"><svg class="i"><use href="#i-spark"/></svg>Remplir toute la semaine</button>
     <div class="box" style="margin-top:12px">
-      <h3 id="rTitle">Idées avec ce que tu as</h3>
-      <input type="text" id="rq" placeholder="Cherche : poulet, pâtes, végé, dessert…" aria-label="Chercher une recette" autocomplete="off">
+      <div class="fhead"><h3 id="rTitle" style="margin:0">Toutes les recettes</h3><button class="clear" id="rCancel" hidden>Annuler</button></div>
+      <input type="text" id="rq" placeholder="Cherche : poulet, pâtes, petit-déj, collation…" aria-label="Chercher une recette" autocomplete="off">
       <div class="list" id="rList" style="margin-top:8px"></div>
     </div>
     <div class="box" style="margin-top:12px">
@@ -441,7 +476,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
       <p class="sub" id="budgetLine" style="margin:-6px 0 6px"></p>
       <div id="shopList"></div>
       <div class="total"><span>Total chez <span id="cheapStore"></span></span><span id="shopTotal"></span></div>
-      <p class="note" style="text-align:left">Coche un produit quand tu l'as acheté, il passe dans ton frigo.<br>Prix dans le magasin le moins cher que tu as choisi, calculés à partir des prix moyens relevés (INSEE oct. 2026, Familles Rurales juin 2026, Numbeo nov. 2026) et des écarts entre enseignes du classement Radin Malin (18/11/2026). Les produits marqués « estimation » n'ont pas de relevé public récent.</p>
+      <p class="note" style="text-align:left">Chaque recette n'est comptée qu'une fois, même si tu la manges plusieurs jours. Coche un produit quand tu l'as acheté, il passe dans ton frigo.<br>Prix dans le magasin le moins cher que tu as choisi, calculés à partir des prix moyens relevés (INSEE oct. 2026, Familles Rurales juin 2026, Numbeo nov. 2026) et des écarts entre enseignes du classement Radin Malin (18/11/2026). Les produits marqués « estimation » n'ont pas de relevé public récent.</p>
     </div>
   </section>
 
@@ -856,6 +891,25 @@ const GOALS={"Équilibré":{d:"Manger varié",f:1.2},"Prise de muscle":{d:"Plus 
 const needP=()=>Math.round((S.weight||75)*GOALS[S.goal].f);
 const needK=()=>Math.round((S.weight||75)*({"Prise de muscle":38,"Sèche":26}[S.goal]||31)/10)*10;
 const macRow=r=>`<p class="note" style="text-align:left;margin:0 0 6px">Pour 1 portion · ≈ ${eur(r.pp||0)} la portion</p><div class="macs"><span><b>${r.kcal}</b>kcal</span><span class="pp"><b>${r.p} g</b>protéines</span><span><b>${r.g} g</b>glucides</span><span><b>${r.l} g</b>lipides</span></div>`;
+ING.push(["pomme","Pommes",2.49],["amande","Amandes",2.99],["beurre cacahuete","Beurre de cacahuète",2.99],["miel","Miel",3.49],["granola","Granola",2.49],["fruits rouges","Fruits rouges",2.99]);
+RDB.push(
+ R("Porridge banane & miel","pancakes",8,"avoine,lait,banane,miel","Gluten,Lactose","Végétarien","petit-déj porridge sucré","Fais chauffer l'avoine dans le lait 5 min.|Ajoute la banane en rondelles.|Un filet de miel."),
+ R("Tartines avocat & œuf","wrap",10,"pain,avocat,oeuf","Gluten,Œufs","Végétarien","petit-déj salé avocat toast","Fais griller le pain.|Écrase l'avocat dessus.|Ajoute un œuf au plat ou mollet."),
+ R("Yaourt granola & fruits rouges","bowl",3,"yaourt,granola,fruits rouges","Gluten,Lactose","Végétarien","petit-déj collation rapide","Verse le yaourt dans un bol.|Ajoute le granola.|Termine par les fruits rouges."),
+ R("Œufs brouillés & pain grillé","shak",8,"oeuf,pain,beurre","Gluten,Œufs,Lactose","Végétarien","petit-déj salé protéiné œufs","Bats les œufs.|Cuis-les doucement au beurre en remuant.|Sers avec le pain grillé."),
+ R("Tartines beurre de cacahuète & banane","pancakes",3,"pain,beurre cacahuete,banane","Gluten,Arachides","Vegan","petit-déj collation sport","Fais griller le pain.|Tartine le beurre de cacahuète.|Ajoute la banane en rondelles."),
+ R("Fromage blanc & fruits rouges","bowl",2,"fromage blanc,fruits rouges,miel","Lactose","Végétarien","collation protéinée sèche","Verse le fromage blanc.|Ajoute les fruits rouges.|Un peu de miel si tu veux."),
+ R("Pomme & amandes","bowl",1,"pomme,amande","Fruits à coque","Vegan","collation rapide","Coupe la pomme.|Une petite poignée d'amandes (25 g)."),
+ R("Œufs durs","shak",10,"oeuf","Œufs","Végétarien","collation protéinée","Plonge 2 œufs 9 min dans l'eau bouillante.|Refroidis-les et écale-les."),
+ R("Houmous & bâtonnets de carottes","bowl",5,"houmous,carotte","Sésame","Vegan","collation apéro légère","Coupe les carottes en bâtonnets.|Trempe dans le houmous."),
+ R("Banane & beurre de cacahuète","pancakes",1,"banane,beurre cacahuete","Arachides","Vegan","collation pré-training","Coupe la banane.|Une cuillère de beurre de cacahuète."),
+ R("Skyr & miel","bowl",1,"skyr,miel","Lactose","Végétarien","collation protéinée post-training","Verse le skyr.|Un filet de miel."),
+ R("Smoothie banane fruits rouges","bowl",5,"banane,fruits rouges,lait","Lactose","Végétarien","collation boisson post-training","Mets tout dans le blender.|Mixe 1 min et bois frais.")
+);
+const SLOTS={"Pancakes banane":["pdj","col"],"Crêpes":["pdj","col"],"Skyr bowl avoine banane":["pdj","col"],"Overnight oats protéinés":["pdj"],"Omelette 4 œufs épinards":["pdj","dej","din"],"Omelette poivron & fromage":["pdj","dej","din"],"Gâteau au chocolat":["col"],
+ "Porridge banane & miel":["pdj"],"Tartines avocat & œuf":["pdj"],"Yaourt granola & fruits rouges":["pdj","col"],"Œufs brouillés & pain grillé":["pdj"],"Tartines beurre de cacahuète & banane":["pdj","col"],
+ "Fromage blanc & fruits rouges":["col","pdj"],"Pomme & amandes":["col"],"Œufs durs":["col"],"Houmous & bâtonnets de carottes":["col"],"Banane & beurre de cacahuète":["col"],"Skyr & miel":["col"],"Smoothie banane fruits rouges":["col","pdj"]};
+RDB.forEach(r=>{r.slot=SLOTS[r.t]||["dej","din"]});
 const IK=Object.fromEntries(ING.map(([k,l,p])=>[k,{l,p}]));
 
 /* ---------- vrais prix + nutrition ----------
@@ -890,6 +944,7 @@ const REAL={
  "quinoa":["500 g",2.79,0.5,"E",70,370,14,64,6],"skyr":["450 g",1.99,0.45,"E",150,63,10,4,0.2],"avoine":["500 g",1.29,0.5,"E",50,370,13,59,7],
  "fromage blanc":["500 g",1.49,0.5,"E",150,75,7.5,4,3],"dinde":["escalopes 400 g",5.49,0.4,"E",150,110,24,0,1.5]
 };
+Object.assign(REAL,{"pomme":["1 kg",2.49,1,"E",150,52,0.3,12,0.2],"amande":["200 g",2.99,0.2,"E",25,580,21,9,50],"beurre cacahuete":["350 g",2.99,0.35,"E",20,600,25,15,50],"miel":["250 g",3.49,0.25,"E",10,320,0.3,80,0],"granola":["375 g",2.49,0.375,"E",40,450,9,65,16],"fruits rouges":["surgelés 500 g",2.99,0.5,"E",80,50,1,10,0.3]});
 const SRC={I:"INSEE · oct. 2026",F:"Familles Rurales · juin 2026",N:"Numbeo · nov. 2026",E:"estimation"};
 /* écarts entre enseignes : classement Radin Malin du 18/11/2026 (Lidl = référence) */
 const IDX={"Lidl":1,"Aldi":1.006,"Leclerc":1.028,"Intermarché":1.078,"Carrefour":1.086,"Super U":1.088};
@@ -936,68 +991,109 @@ $("#fClear").onclick=()=>{fridge=[];saveF();renderFridge()};
 $("#scanRes").addEventListener("click",e=>{const b=e.target.closest("[data-r]");if(!b)return;return openR(RDB[+b.dataset.r]);const r=RDB[+b.dataset.r],miss=r.need.filter(k=>!has(k));
  openSheet(`<h3>${esc(r.t)}</h3><p class="sub">${r.min} min · ${r.need.length-miss.length} ingrédient${r.need.length-miss.length>1?"s":""} sur ${r.need.length} dans ton frigo</p><span class="lbl">Ingrédients</span><ul>${r.need.map(k=>`<li>${label(k)}${has(k)?"":` <span style="color:var(--warn)">· à acheter, ${eur(IK[k]?.p||1.5)}</span>`}</li>`).join("")}</ul><span class="lbl">Étapes</span><ol>${r.st.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>`)});
 
-/* ---------- ta semaine ---------- */
+/* ---------- ta semaine : 4 repas par jour ---------- */
 const DAYS=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
-let plan={};try{plan=JSON.parse(localStorage.getItem("miam-plan"))||{}}catch(e){}
-if(!Object.keys(plan).length)plan={Lundi:"Tagliatelles bolognaise",Mercredi:"Fajitas poulet & poivrons",Vendredi:"Smash burger"};
+const SL=[["pdj","Petit-déj","8 h",0.25],["dej","Déjeuner","12 h 30",0.35],["col","Collation","16 h 30",0.10],["din","Dîner","20 h",0.30]];
+const SLN=Object.fromEntries(SL.map(x=>[x[0],x[1]]));
+const PORTIONS=[0.75,1,1.25,1.5,2];
+const normPlan=p=>{const o={};DAYS.forEach(d=>{const v=p&&p[d];if(!v)return;if(typeof v==="string"){o[d]={din:{t:v,m:1}};return}
+ const day={};SL.forEach(([k])=>{const x=v[k];if(!x)return;if(typeof x==="string")day[k]={t:x,m:1};else if(x.t)day[k]={t:x.t,m:+x.m||1}});if(Object.keys(day).length)o[d]=day});return o};
+let plan={};try{plan=normPlan(JSON.parse(localStorage.getItem("miam-plan"))||{})}catch(e){}
+if(!Object.keys(plan).length)plan=normPlan({Lundi:"Tagliatelles bolognaise",Mercredi:"Fajitas poulet & poivrons",Vendredi:"Smash burger"});
 const saveP=()=>{try{localStorage.setItem("miam-plan",JSON.stringify(plan))}catch(e){}};
 const byT=t=>RDB.find(r=>r.t===t);
 const missOf=r=>r.need.filter(k=>!has(k));
-let pickDay=null;
-function recRow(r,i,act){const miss=missOf(r),hv=r.need.length-miss.length;return `<div class="item rrow">${thumb(r.dish,i+120,r.img)}<button class="rinfo" data-open="${esc(r.t)}"><b>${esc(r.t)}</b><small>${r.min} min · ${hv}/${r.need.length} dans ton frigo${miss.length?` · manque ${miss.map(label).join(", ").toLowerCase()}`:""}</small><span class="mac">${r.p} g protéines · ${r.kcal} kcal</span><span class="meter"><i style="width:${hv/r.need.length*100}%"></i></span></button>${act}</div>`}
+const slotsOf=r=>r.slot||["dej","din"];
+const getS=(d,s)=>plan[d]&&plan[d][s]&&byT(plan[d][s].t)?plan[d][s]:null;
+function setS(d,s,t,m=1){plan[d]=plan[d]||{};plan[d][s]={t,m};saveP()}
+function delS(d,s){if(plan[d]){delete plan[d][s];if(!Object.keys(plan[d]).length)delete plan[d]}saveP()}
+let curDay=DAYS[(new Date().getDay()+6)%7],pickSlot=null;
+const isSportDay=d=>S.program&&S.program[d]&&S.program[d]!=="Repos";
+function slotLabel(d,s){if(s!=="col")return SLN[s];if(!isSportDay(d))return "Collation";
+ const t=ymd(new Date());return d===todayName()&&S.sessions.some(x=>x.d===t)?"Post-training":"Pré-training"}
+function dayTargets(d){const w=S.weight||75,prog=S.program&&S.program[d],heavy=prog&&isHeavy(prog);
+ const k=needK()+(isSportDay(d)?(heavy?450:350):0);
+ return{k,p:needP(),g:Math.round(w*(heavy?5.5:isSportDay(d)?4.5:3)),l:Math.round(w*0.9)}}
+function slotShare(d,s){const sh={pdj:.25,dej:.35,col:.10,din:.30};if(isSportDay(d)){sh.col=.15;sh.din=.25}return sh[s]}
+function dayTotals(d){const t={k:0,p:0,g:0,l:0,n:0};SL.forEach(([s])=>{const x=getS(d,s);if(!x)return;const r=byT(x.t);t.k+=r.kcal*x.m;t.p+=r.p*x.m;t.g+=r.g*x.m;t.l+=r.l*x.m;t.n++});return t}
+const okRec=r=>!r.al.some(a=>S.allergies.has(a))&&dietOk(r.v);
+function rankFor(d,s,exclude=[]){const tg=dayTargets(d),tk=tg.k*slotShare(d,s),tp=tg.p*slotShare(d,s),heavy=S.program&&isHeavy(S.program[d]||"");
+ const used={};DAYS.forEach(dd=>SL.forEach(([ss])=>{const x=getS(dd,ss);if(x&&!(dd===d&&ss===s))used[x.t]=(used[x.t]||0)+1}));
+ const sameDay=SL.map(([ss])=>ss!==s&&getS(d,ss)?.t).filter(Boolean);const dayIng=sameDay.flatMap(t=>byT(t).need);
+ return RDB.filter(r=>okRec(r)&&slotsOf(r).includes(s)&&!exclude.includes(r.t)).map(r=>{
+  let best=null;const tl=tg.l*slotShare(d,s);(s==="col"||s==="pdj"?[1,1.25,1.5]:[0.75,1,1.25,1.5]).forEach(m=>{const k=r.kcal*m,sc=Math.abs(k-tk)/tk*40+Math.max(0,tp-r.p*m)*0.8+Math.max(0,r.l*m-tl*1.15)*0.6+(m!==1?2:0);if(!best||sc<best.sc)best={m,sc}});
+  let sc=best.sc+missOf(r).length/r.need.length*14+(used[r.t]||0)*(s==="pdj"||s==="col"?6:30)+(sameDay.includes(r.t)?60:0)+(r.need.includes("oeuf")&&dayIng.includes("oeuf")?18:0)+r.need.filter(k=>k!=="oeuf"&&dayIng.includes(k)&&["poulet","boeuf hache","thon","saumon","pate","riz"].includes(k)).length*8;
+  if(heavy&&(s==="dej"||s==="col"))sc-=r.g*best.m*0.08;
+  if(S.goal==="Sèche")sc+=r.l*best.m*0.25;if(S.goal==="Prise de muscle")sc-=r.p*best.m*0.15;
+  if(S.goal==="Petit budget")sc+=missOf(r).reduce((a,k)=>a+(IK[k]?.p||1.5),0)*1.5;
+  return{r,m:best.m,sc}}).sort((a,b)=>a.sc-b.sc)}
+function fillDay(d,all){SL.forEach(([s])=>{if(!all&&getS(d,s))return;const c=rankFor(d,s)[0];if(c)setS(d,s,c.r.t,c.m)})}
+const swapSeen={};
+function swapSlot(d,s){const key=d+s,cur=getS(d,s);swapSeen[key]=swapSeen[key]||[];if(cur)swapSeen[key].push(cur.t);
+ let c=rankFor(d,s,swapSeen[key])[0];if(!c){swapSeen[key]=cur?[cur.t]:[];c=rankFor(d,s,swapSeen[key])[0]}if(c){setS(d,s,c.r.t,c.m);toast("Remplacé par "+c.r.t)}}
+function recRow(r,i,act,m){const miss=missOf(r),hv=r.need.length-miss.length;m=m||1;return `<div class="item rrow">${thumb(r.dish,i+120,r.img)}<button class="rinfo" data-open="${esc(r.t)}"><b>${esc(r.t)}</b><small>${r.min} min · ${hv}/${r.need.length} dans ton frigo${miss.length?` · manque ${miss.map(label).join(", ").toLowerCase()}`:""}</small><span class="mac">${Math.round(r.p*m)} g protéines · ${Math.round(r.kcal*m)} kcal${m!==1?` · portion ×${String(m).replace(".",",")}`:""}</span><span class="meter"><i style="width:${hv/r.need.length*100}%"></i></span></button>${act}</div>`}
+const bar=(lbl,v,t,u,over)=>{const pc=t?Math.min(100,v/t*100):0,col=!over&&v>t*1.1?"var(--warn)":pc>=90?"var(--good)":"#ff8a4c";return `<div class="mb"><div class="mbt"><span>${lbl}</span><b>${Math.round(v)}<small> / ${t} ${u}</small></b></div><span class="meter big"><i style="width:${pc}%;background:${col}"></i></span></div>`};
 function renderIA(){
- const ok=r=>!r.al.some(a=>S.allergies.has(a))&&dietOk(r.v);
- // planning
- $("#weekList").innerHTML=DAYS.map(d=>{const r=plan[d]&&byT(plan[d]);return `<div class="day">
-  <span class="dname">${d.slice(0,3)}${S.program&&S.program[d]?`<i class="sbadge ${S.program[d]==="Repos"?"rest":""}">${esc(S.program[d]==="Repos"?"Repos":S.program[d])}</i>`:""}</span>
-  ${r?`<button class="dmeal" data-open="${esc(r.t)}">${thumb(r.dish,DAYS.indexOf(d)+150,r.img)}<span><b>${esc(r.t)}</b><small>${r.p} g prot. · ${missOf(r).length?`${missOf(r).length} ingrédient${missOf(r).length>1?"s":""} à acheter`:"tu as tout"}</small></span></button><button class="dx" data-del="${d}" aria-label="Retirer le plat de ${d}">${ico("x")}</button>`
-   :`<button class="dadd" data-add="${d}">${ico("plus")}Ajouter un plat</button>`}</div>`}).join("");
- // recherche
- const q=norm($("#rq").value||"");
- let list=RDB.filter(ok);
+ // pastilles des jours
+ const now=new Date(),mon=new Date(now);mon.setDate(now.getDate()-((now.getDay()+6)%7));
+ $("#dayPills").innerHTML=DAYS.map((d,i)=>{const dt=new Date(mon);dt.setDate(mon.getDate()+i);const n=dayTotals(d).n,pr=S.program&&S.program[d];
+  return `<button class="dpill ${d===curDay?"on":""} ${d===todayName()?"tod":""}" data-day="${d}" aria-label="${d}"><span class="dpw">${d.slice(0,3)}</span><span class="dpn">${dt.getDate()}</span><span class="dpr" style="--f:${n/4}"></span><span class="dps ${pr&&pr!=="Repos"?"sp":""}">${pr?esc(pr==="Repos"?"Repos":pr.split(" ")[0]):""}</span></button>`}).join("");
+ // journée
+ const d=curDay,tg=dayTargets(d),tt=dayTotals(d),pr=S.program&&S.program[d];
+ $("#dayHead").innerHTML=`<div><small>${d===todayName()?"Aujourd'hui":"Journée"}</small><b>${d}</b></div>${pr?`<span class="dtag ${pr==="Repos"?"rest":""}">${ico(pr==="Repos"?"clock":"gym")}${esc(pr)}</span>`:""}`;
+ $("#dayMacros").innerHTML=bar("Calories",tt.k,tg.k,"kcal")+bar("Protéines",tt.p,tg.p,"g",true)+bar("Glucides",tt.g,tg.g,"g")+bar("Lipides",tt.l,tg.l,"g");
+ const gap=tg.p-tt.p;$("#dayNote").textContent=!tt.n?"Ta journée est vide : remplis-la automatiquement ou ajoute tes repas.":gap>15?`Il te manque ${Math.round(gap)} g de protéines aujourd'hui : essaie 🔄 sur la collation ou augmente une portion.`:tt.k>tg.k*1.12?"Tu dépasses ton objectif calorique : baisse une portion.":tt.n<4?`${4-tt.n} repas à compléter.`:"Journée équilibrée pour ton objectif 👌";
+ $("#slots").innerHTML=SL.map(([s,,h])=>{const x=getS(d,s),r=x&&byT(x.t),sh=slotShare(d,s);
+  return `<div class="slot"><div class="slh"><span>${slotLabel(d,s)}</span><small>${h} · objectif ≈ ${Math.round(tg.k*sh)} kcal</small></div>
+  ${r?`<div class="slc"><button class="slm" data-open="${esc(r.t)}">${thumb(r.dish,DAYS.indexOf(d)*4+SL.findIndex(z=>z[0]===s)+400,r.img)}<span><b>${esc(r.t)}</b><small>${Math.round(r.kcal*x.m)} kcal · ${Math.round(r.p*x.m)} g prot. · ${Math.round(r.g*x.m)} g gluc.</small>${missOf(r).length?`<small class="w">${missOf(r).length} à acheter</small>`:`<small class="ok">dans ton frigo</small>`}</span></button>
+   <div class="sla"><button class="por" data-por="${s}" aria-label="Changer la portion">×${String(x.m).replace(".",",")}</button><button class="ic" data-swap="${s}" aria-label="Changer de plat">🔄</button><button class="ic" data-dels="${s}" aria-label="Retirer">${ico("x")}</button></div></div>`
+  :`<button class="dadd" data-adds="${s}">${ico("plus")}Ajouter ${s==="pdj"?"un petit-déj":s==="col"?"une collation":"un plat"}</button>`}</div>`}).join("");
+ // recherche / idées
+ const q=norm($("#rq").value||"");const ps=pickSlot;
+ let list=RDB.filter(okRec);if(ps)list=list.filter(r=>slotsOf(r).includes(ps.s));
  if(q){const words=q.split(/\s+/);list=list.filter(r=>{const hay=norm(r.t+" "+r.tags+" "+r.need.map(label).join(" "));return words.every(w=>hay.includes(w))})}
- const score=r=>{const m=missOf(r).length/r.need.length;
-  if(S.goal==="Prise de muscle")return -r.p+m*25;
-  if(S.goal==="Sèche")return -(r.p/r.kcal)*1000+m*20+(r.kcal>650?30:0);
-  if(S.goal==="Petit budget")return missOf(r).reduce((s,k)=>s+(IK[k]?.p||1.5),0)+m;
-  return m*10};
- list=list.sort((a,b)=>score(a)-score(b));
- $("#rTitle").textContent=q?`${list.length} recette${list.length>1?"s":""} pour « ${$("#rq").value.trim()} »`:(pickDay?`Choisis un plat pour ${pickDay}`:{"Prise de muscle":"Idées pour ta prise de muscle","Sèche":"Idées pour ta sèche","Petit budget":"Idées petit budget"}[S.goal]||"Idées avec ce que tu as");
- $("#rList").innerHTML=list.length?list.slice(0,q?20:8).map((r,i)=>recRow(r,i,`<button class="addbtn" data-pick="${esc(r.t)}">${pickDay?pickDay.slice(0,3):"Ajouter"}</button>`)).join(""):`<p class="sub" style="margin:0">Aucune recette trouvée. Essaie « poulet », « pâtes », « végé » ou « dessert ».</p>`;
- // courses, rangées par plat
- const cheap=cheapestStore(),k=(IDX[cheap]||IDX_AVG)/IDX_AVG;
- $("#cheapStore").textContent=cheap;
- const nPlan=DAYS.filter(d=>plan[d]).length;
- const planned=DAYS.map(d=>plan[d]&&byT(plan[d])).filter(Boolean),avgP=planned.length?Math.round(planned.reduce((s,r)=>s+r.p,0)/planned.length):0;
- $("#iaSub").textContent=`${nPlan} repas prévu${nPlan>1?"s":""} cette semaine. La liste de courses se remplit toute seule avec ce qui manque dans ton frigo.`;
- const per=Math.round(needP()/3);
- $("#goalCard").innerHTML=`<div class="gc-top"><div><small>Objectif</small><b>${S.goal}</b></div><button class="clear" onclick="go('prof')">Modifier</button></div>
-  <div class="gc-stats"><div><b>${needP()} g</b><span>protéines / jour</span></div><div><b>${needK()}</b><span>kcal / jour</span></div><div><b>${avgP} g</b><span>par plat prévu</span></div></div>
-  <span class="meter big"><i style="width:${Math.min(100,avgP/per*100)}%;background:${avgP>=per?"var(--good)":"var(--warn)"}"></i></span>
-  <p class="gc-note">${planned.length?(avgP>=per?`Tes plats couvrent bien un tiers de ton besoin en protéines (${per} g par repas).`:`Il manque ${per-avgP} g de protéines par repas pour ton objectif de ${per} g. Regarde les idées ci-dessous.`):"Ajoute des plats pour voir tes apports."}</p>`;
+ const ranked=ps?rankFor(ps.d,ps.s).filter(c=>list.includes(c.r)):list.map(r=>({r,m:1,sc:missOf(r).length/r.need.length*10-(S.goal==="Prise de muscle"?r.p*0.5:0)})).sort((a,b)=>a.sc-b.sc);
+ $("#rTitle").textContent=ps?`${slotLabel(ps.d,ps.s)} de ${ps.d.toLowerCase()}`:q?`${ranked.length} recette${ranked.length>1?"s":""} pour « ${$("#rq").value.trim()} »`:"Toutes les recettes";
+ $("#rCancel").hidden=!ps;
+ $("#rList").innerHTML=ranked.length?ranked.slice(0,q||ps?20:8).map((c,i)=>recRow(c.r,i,`<button class="addbtn" data-pick="${esc(c.r.t)}" data-m="${c.m}">${ps?"Choisir":"Ajouter"}</button>`,ps?c.m:1)).join(""):`<p class="sub" style="margin:0">Aucune recette trouvée. Essaie « poulet », « pâtes », « végé » ou « petit-déj ».</p>`;
+ // résumé semaine
+ const nMeals=DAYS.reduce((a,dd)=>a+dayTotals(dd).n,0),full=DAYS.filter(dd=>dayTotals(dd).n===4).length;
+ $("#iaSub").textContent=`${nMeals}/28 repas prévus · ${full} journée${full>1?"s":""} complète${full>1?"s":""} · objectif ${S.goal.toLowerCase()}.`;
+ // courses : une fois par recette
+ const cheap=cheapestStore(),k=(IDX[cheap]||IDX_AVG)/IDX_AVG;$("#cheapStore").textContent=cheap;
+ const uses={};DAYS.forEach(dd=>SL.forEach(([s])=>{const x=getS(dd,s);if(x)(uses[x.t]=uses[x.t]||[]).push(dd.slice(0,3)+" "+SLN[s].toLowerCase())}));
  const firstFor={};let T=0,html="",n=0;
- DAYS.forEach((d,di)=>{const r=plan[d]&&byT(plan[d]);if(!r)return;const miss=missOf(r);
-  let sub=0;const rows=miss.map(x=>{const pr=(IK[x]?.p||1.5)*k;if(firstFor[x])return `<div class="check dup"><span class="dot"></span><span>${esc(label(x))}<small class="for">déjà dans ta liste pour ${firstFor[x].toLowerCase()}</small></span><span class="p">—</span></div>`;
-   firstFor[x]=d;sub+=pr;n++;return `<label class="check"><input type="checkbox" id="sh_${d}_${x.replace(/\W/g,"")}" data-buy="${x}"><span>${esc(label(x))} <small class="pk">${esc(IK[x]?.pack||"")}${IK[x]?.src&&IK[x].src!=="E"?" · "+SRC[IK[x].src]:" · estimation"}</small></span><span class="p">${eur(pr)}</span></label>`}).join("");
-  T+=sub;
-  html+=`<div class="sgroup"><div class="shead">${thumb(r.dish,di+150,r.img)}<div><small>${d}</small><b>${esc(r.t)}</b></div><span class="sub-t">${miss.length?eur(sub):""}</span></div>
-   ${miss.length?rows:`<p class="allok">Tu as déjà tout dans ton frigo</p>`}</div>`});
- $("#shopList").innerHTML=nPlan?html:`<p class="sub" style="margin:0">Ajoute des plats à ta semaine pour remplir la liste.</p>`;
+ Object.keys(uses).forEach((t,ri)=>{const r=byT(t),miss=missOf(r);let sub=0;
+  const rows=miss.map(x=>{const pr=(IK[x]?.p||1.5)*k;if(firstFor[x])return `<div class="check dup"><span class="dot"></span><span>${esc(label(x))}<small class="for">déjà dans ta liste (${esc(firstFor[x])})</small></span><span class="p">—</span></div>`;
+   firstFor[x]=t;sub+=pr;n++;return `<label class="check"><input type="checkbox" id="sh_${ri}_${x.replace(/\W/g,"")}" data-buy="${x}"><span>${esc(label(x))} <small class="pk">${esc(IK[x]?.pack||"")}${IK[x]?.src&&IK[x].src!=="E"?" · "+SRC[IK[x].src]:" · estimation"}</small></span><span class="p">${eur(pr)}</span></label>`}).join("");
+  T+=sub;html+=`<div class="sgroup"><div class="shead">${thumb(r.dish,ri+150,r.img)}<div><small>${esc(uses[t].join(" · "))}</small><b>${esc(r.t)}</b></div><span class="sub-t">${miss.length?eur(sub):""}</span></div>${miss.length?rows:`<p class="allok">Tu as déjà tout dans ton frigo</p>`}</div>`});
+ $("#shopList").innerHTML=nMeals?html:`<p class="sub" style="margin:0">Ajoute des repas à ta semaine pour remplir la liste.</p>`;
  $("#shopTotal").textContent=eur(T);$("#shopTotal").style.color=T>S.budget?"var(--warn)":"var(--good)";
-
  if(typeof cloudSave==="function"){cloudSave();renderAuto()}
  $("#budgetLine").textContent=`${n} produit${n>1?"s":""} à acheter · budget ${S.budget} € par semaine${T>S.budget?" · dépassé":""}`;
  requestAnimationFrame(paintAll);
 }
-function openR(r){const miss=missOf(r);openSheet(`<h3>${esc(r.t)}</h3><p class="sub">${r.min} min · ${r.need.length-miss.length} ingrédient${r.need.length-miss.length>1?"s":""} sur ${r.need.length} dans ton frigo</p>${macRow(r)}<span class="lbl">Ingrédients</span><ul>${r.need.map(k=>`<li>${label(k)}${has(k)?` <span style="color:var(--good)">· dans ton frigo</span>`:` <span style="color:var(--warn)">· à acheter, ${eur(IK[k]?.p||1.5)}</span>`}</li>`).join("")}</ul><span class="lbl">Étapes</span><ol>${r.st.map(s=>`<li>${esc(s)}</li>`).join("")}</ol><div class="row" style="margin-top:12px"><button class="btn" id="sheetAdd">Ajouter à ma semaine</button></div>`);
+function openR(r){const miss=missOf(r);openSheet(`<h3>${esc(r.t)}</h3><p class="sub">${r.min} min · ${r.need.length-miss.length} ingrédient${r.need.length-miss.length>1?"s":""} sur ${r.need.length} dans ton frigo · ${slotsOf(r).map(s=>SLN[s].toLowerCase()).join(", ")}</p>${macRow(r)}<span class="lbl">Ingrédients</span><ul>${r.need.map(k=>`<li>${label(k)}${has(k)?` <span style="color:var(--good)">· dans ton frigo</span>`:` <span style="color:var(--warn)">· à acheter, ${eur(IK[k]?.p||1.5)}</span>`}</li>`).join("")}</ul><span class="lbl">Étapes</span><ol>${r.st.map(s=>`<li>${esc(s)}</li>`).join("")}</ol><div class="row" style="margin-top:12px"><button class="btn" id="sheetAdd">Ajouter à ma semaine</button></div>`);
  $("#sheetAdd").onclick=()=>chooseDay(r.t)}
-function chooseDay(t){if(pickDay){plan[pickDay]=t;toast(`${t} ajouté ${pickDay.toLowerCase()}`);pickDay=null;saveP();closeSheet();$("#rq").value="";renderIA();return}
- openSheet(`<h3>Quel jour ?</h3><p class="sub">${esc(t)}</p><div class="grid" id="dGrid">${DAYS.map(d=>`<button class="opt dayopt" data-d="${d}"><b>${d}</b><small>${plan[d]?esc(plan[d]):"libre"}</small></button>`).join("")}</div>`);
- $("#dGrid").onclick=e=>{const b=e.target.closest("[data-d]");if(!b)return;plan[b.dataset.d]=t;saveP();closeSheet();toast(`Ajouté ${b.dataset.d.toLowerCase()}`);renderIA()}}
-$("#v-ia").addEventListener("click",e=>{const o=e.target.closest("[data-open]"),p=e.target.closest("[data-pick]"),a=e.target.closest("[data-add]"),d=e.target.closest("[data-del]");
- if(p)return chooseDay(p.dataset.pick);if(o)return openR(byT(o.dataset.open));
- if(a){pickDay=a.dataset.add;renderIA();$("#rq").focus();$("#rq").scrollIntoView({behavior:"smooth",block:"center"})}
- if(d){delete plan[d.dataset.del];saveP();renderIA()}});
+function chooseDay(t,m){const r=byT(t);if(pickSlot){const{d,s}=pickSlot;setS(d,s,t,m||1);toast(`${t} · ${slotLabel(d,s).toLowerCase()} de ${d.toLowerCase()}`);pickSlot=null;closeSheet();$("#rq").value="";curDay=d;renderIA();return}
+ let selD=curDay;const ss=slotsOf(r);
+ const draw=()=>{$("#cdBody").innerHTML=`<span class="lbl">Jour</span><div class="grid g4" id="cdDays">${DAYS.map(d=>`<button class="opt" data-cd="${d}" aria-pressed="${d===selD}">${d.slice(0,3)}</button>`).join("")}</div>
+  <span class="lbl">Moment</span><div class="grid" id="cdSlots">${SL.map(([s])=>`<button class="opt dayopt" data-cs="${s}" ${ss.includes(s)?"":"disabled"}><b>${slotLabel(selD,s)}</b><small>${getS(selD,s)?esc(getS(selD,s).t):"libre"}</small></button>`).join("")}</div>`;
+  $("#cdDays").onclick=e=>{const b=e.target.closest("[data-cd]");if(b){selD=b.dataset.cd;draw()}};
+  $("#cdSlots").onclick=e=>{const b=e.target.closest("[data-cs]");if(!b||b.disabled)return;const c=rankFor(selD,b.dataset.cs).find(x=>x.r.t===t);setS(selD,b.dataset.cs,t,c?c.m:1);closeSheet();curDay=selD;toast(`Ajouté · ${slotLabel(selD,b.dataset.cs).toLowerCase()} de ${selD.toLowerCase()}`);go("ia");renderIA()}};
+ openSheet(`<h3>Ajouter à ma semaine</h3><p class="sub">${esc(t)}</p><div id="cdBody"></div>`);draw()}
+$("#v-ia").addEventListener("click",e=>{const g=s=>e.target.closest(s);let b;
+ if(b=g("[data-day]")){curDay=b.dataset.day;pickSlot=null;renderIA();return}
+ if(b=g("[data-pick]"))return chooseDay(b.dataset.pick,+b.dataset.m||1);
+ if(b=g("[data-open]"))return openR(byT(b.dataset.open));
+ if(b=g("[data-adds]")){pickSlot={d:curDay,s:b.dataset.adds};$("#rq").value="";renderIA();$("#rTitle").scrollIntoView({behavior:"smooth",block:"start"});return}
+ if(b=g("[data-swap]")){swapSlot(curDay,b.dataset.swap);renderIA();return}
+ if(b=g("[data-dels]")){delS(curDay,b.dataset.dels);renderIA();return}
+ if(b=g("[data-por]")){const x=getS(curDay,b.dataset.por);if(!x)return;const i=PORTIONS.indexOf(x.m);x.m=PORTIONS[(i+1)%PORTIONS.length];saveP();renderIA();return}
+ if(g("#fillDay")){fillDay(curDay,false);renderIA();toast(`${curDay} complété`);return}
+ if(g("#fillWeek")){DAYS.forEach(d=>fillDay(d,false));renderIA();toast("Semaine complétée : 28 repas");return}
+ if(g("#clearDay")){delete plan[curDay];saveP();renderIA();return}
+ if(g("#rCancel")){pickSlot=null;renderIA()}});
 $("#rq").addEventListener("input",renderIA);
 $("#shopList").addEventListener("change",e=>{const c=e.target.closest("[data-buy]");if(c&&c.checked){const k=c.dataset.buy;setTimeout(()=>{if(!fridge.includes(k))fridge.push(k);saveF();toast(`${label(k)} ajouté à ton frigo`);renderFridge()},350)}});
 
@@ -1031,7 +1127,7 @@ const stateOf=()=>({fridge:[...fridge],plan:{...plan},goal:S.goal,weight:S.weigh
 let saveT;
 function cloudSave(){if(!stRef||!cloudReady)return;clearTimeout(saveT);saveT=setTimeout(async()=>{const st=stateOf(),j=JSON.stringify(st);if(j===lastJSON)return;lastJSON=j;try{await stRef.set(autoInfo?{...st,auto:autoInfo}:st)}catch(e){console.warn("Sauvegarde impossible",e&&e.code)}},700)}
 function applyCloud(d){
- if(Array.isArray(d.fridge))fridge=d.fridge.slice();if(d.plan&&typeof d.plan==="object")plan={...d.plan};
+ if(Array.isArray(d.fridge))fridge=d.fridge.slice();if(d.plan&&typeof d.plan==="object")plan=normPlan(d.plan);
  if(GOALS[d.goal])S.goal=d.goal;if(+d.weight)S.weight=+d.weight;if(+d.budget)S.budget=+d.budget;
  if(Array.isArray(d.allergies))S.allergies=new Set(d.allergies);if(DIETS.includes(d.diet))S.diet=d.diet;if(Array.isArray(d.stores))S.stores=new Set(d.stores);if(d.program&&typeof d.program==="object")S.program={...S.program,...d.program};if(Array.isArray(d.sessions))S.sessions=d.sessions.slice(0,60);if(Array.isArray(d.logs))S.logs=d.logs.slice(0,30);saveSport();
  autoInfo=d.auto&&typeof d.auto==="object"?d.auto:null;
@@ -1113,7 +1209,7 @@ $("#logForm").onsubmit=e=>{e.preventDefault();if(!form.type){toast("Choisis le t
  S.sessions=[ses,...S.sessions.filter(x=>!(x.d===ses.d&&x.type===ses.type))].sort((a,b)=>a.d<b.d?1:-1).slice(0,60);
  saveSport();form.type=null;renderSport();renderIA();toast(`Séance enregistrée · ${ses.kcal} kcal`);$("#recoTitle").scrollIntoView({behavior:"smooth",block:"start"})};
 $("#v-sport").addEventListener("click",e=>{const o=e.target.closest("[data-open]"),t=e.target.closest("[data-tonight]"),pg=e.target.closest("[data-prog]"),ds=e.target.closest("[data-delsess]");
- if(t){plan[todayName()]=t.dataset.tonight;saveP();renderIA();toast(`${t.dataset.tonight} ajouté ce soir`);return}
+ if(t){const r=byT(t.dataset.tonight),h=new Date().getHours(),want=h<10?"pdj":h<14?"dej":h<18?"col":"din",sl=slotsOf(r).includes(want)?want:slotsOf(r).includes("din")?"din":slotsOf(r)[0];const c=rankFor(todayName(),sl).find(x=>x.r.t===r.t);setS(todayName(),sl,r.t,c?c.m:1);curDay=todayName();renderIA();toast(`${r.t} · ${slotLabel(todayName(),sl).toLowerCase()} du jour`);return}
  if(o)return openR(byT(o.dataset.open));
  if(ds){S.sessions.splice(+ds.dataset.delsess,1);saveSport();renderSport();renderIA();return}
  const lg=e.target.closest("[data-log]");if(lg)return showLog(+lg.dataset.log);
